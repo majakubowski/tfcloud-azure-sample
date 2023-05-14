@@ -14,16 +14,16 @@ jobs:
       - uses: actions/checkout@v3
 
       - run: |
-          cd SampleAzureFunction
+          cd SampleFunctionApp
           dotnet restore
           dotnet publish --configuration Release --output publish
 
       - uses: vimtor/action-zip@v1
         with:
-          files: ${{ github.workspace }}/SampleAzureFunction/publish/
-          dest: sample-azure-function.zip
+          files: ${{ github.workspace }}/SampleFunctionApp/publish/
+          dest: sample-function-app.zip
 
       - uses: actions/upload-artifact@v1
         with:
-          name: sample-azure-function
-          path: ${{ github.workspace }}/sample-azure-function.zip
+          name: sample-function-app
+          path: ${{ github.workspace }}/sample-function-app.zip
