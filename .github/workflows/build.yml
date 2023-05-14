@@ -15,8 +15,8 @@ jobs:
 
       - run: |
           cd SampleFunctionApp
-          dotnet build --configuration Release *.csproj
-          dotnet publish --configuration Release --output publish *.csproj
+          dotnet build --configuration Release 
+          dotnet publish --configuration Release --output publish
 
       - uses: vimtor/action-zip@v1
         with:
