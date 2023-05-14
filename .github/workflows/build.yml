@@ -1,0 +1,33 @@
+name: Build
+
+on:
+  workflow_dispatch
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6
+
+      - run: |
+          cd SampleAzureFunction
+          dotnet restore
+          dotnet publish --configuration Release --output publish
+
+      - uses: vimtor/action-zip@v1
+        with:
+          files: ${{ github.workspace }}/SampleAzureFunction/publish/
+          dest: sample-azure-function.zip
+
+      - uses: actions/upload-artifact@v1
+        with:
+          name: sample-azure-function
+          path: ${{ github.workspace }}/sample-azure-function.zip
