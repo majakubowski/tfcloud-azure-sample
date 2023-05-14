@@ -1,0 +1,45 @@
+name: Deploy
+
+
+on:
+  workflow_dispatch:
+    inputs:
+      env:
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: "${{inputs.env}}"
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: IaC
+
+    env:
+      TF_CLOUD_ORGANIZATION: ${{vars.TF_CLOUD_ORGANIZATION}}
+      TF_WORKSPACE: ${{vars.TF_WORKSPACE}}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        id: terraform-setup
+        uses: hashicorp/setup-terraform@v2
+        with:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+      - name: Terraform Init
+        id: terraform-init
+        run: terraform init
+
+      - name: Terraform Apply
+        id: terraform-apply
+        run: terraform apply -auto-approve -input=false
+
