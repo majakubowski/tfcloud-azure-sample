@@ -30,13 +30,22 @@ jobs:
       TF_WORKSPACE: ${{vars.TF_WORKSPACE}}
 
     steps:
-      - name: Download Infrastructure as Code Build Artifact
-        id: download-build-artifacts
-        uses: dawidd6/action-download-artifact@v2.24.3
+      - name: Download IaC Artifact
+        id: download-iac-artifact
+        uses: dawidd6/action-download-artifact@v2.27
         with:
-          github_token: ${{ secrets.GH_API_PAT }}
           workflow: build.yml
           run_id: ${{ inputs.run_id }}
+          name: iac
+
+      - name: Download FunctionApp Artifact
+        id: download-functionapp-artifact
+        uses: dawidd6/action-download-artifact@v2.27
+        with:
+          workflow: build.yml
+          run_id: ${{ inputs.run_id }}
+          name: functionapp
+          skip_unpack: true
 
       - name: Setup Terraform
         id: terraform-setup

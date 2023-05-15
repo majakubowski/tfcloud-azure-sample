@@ -19,13 +19,13 @@ jobs:
         working-directory: SampleFunctionApp
 
       - name: Upload FunctionApp
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         with:
-          name: sample-function-app
+          name: functionapp
           path: ${{ github.workspace }}/SampleFunctionApp/publish/
 
       - name: Upload IaC
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         with:
           name: iac
           path: ${{ github.workspace }}/IaC
