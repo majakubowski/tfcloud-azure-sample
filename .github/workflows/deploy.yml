@@ -23,7 +23,6 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: IaC
 
     env:
       TF_CLOUD_ORGANIZATION: ${{vars.TF_CLOUD_ORGANIZATION}}
