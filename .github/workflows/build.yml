@@ -10,16 +10,29 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        shell: bash
+        working-directory: SampleFunctionApp
+
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - shell: pwsh
-        run: |
-          cd SampleFunctionApp
-          dotnet publish --configuration Release --os win --output publish
-          Compress-Archive -Path ${{ github.workspace }}/SampleFunctionApp/publish/* -DestinationPath ${{ github.workspace }}/sample-function-app.zip
+      - name: Publish FunctionApp
+        run: dotnet publish --configuration Release --os win --output publish
 
-      - uses: actions/upload-artifact@v1
+      - name: Create FunctionApp package
+        run: Compress-Archive -Path ${{ github.workspace }}/SampleFunctionApp/publish/* -DestinationPath ${{ github.workspace }}/sample-function-app.zip
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v1
         with:
           name: sample-function-app
           path: ${{ github.workspace }}/sample-function-app.zip
+
+      - name: Upload IaC
+        uses: actions/upload-artifact@v1
+        with:
+          name: iac
+          path: ${{ github.workspace }}/IaC

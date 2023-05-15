@@ -4,7 +4,10 @@ name: Deploy
 on:
   workflow_dispatch:
     inputs:
-      env:
+      environment_name:
+        required: true
+        type: string
+      run_id:
         required: true
         type: string
 
@@ -15,7 +18,7 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: "${{inputs.env}}"
+    environment: ${{ inputs.environment_name }}
 
     defaults:
       run:
@@ -27,7 +30,13 @@ jobs:
       TF_WORKSPACE: ${{vars.TF_WORKSPACE}}
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Download Infrastructure as Code Build Artifact
+        id: download-build-artifacts
+        uses: dawidd6/action-download-artifact@v2.24.3
+        with:
+          github_token: ${{ secrets.GH_API_PAT }}
+          workflow: build.yml
+          run_id: ${{ inputs.run_id }}
 
       - name: Setup Terraform
         id: terraform-setup
@@ -43,3 +52,22 @@ jobs:
         id: terraform-apply
         run: terraform apply -auto-approve -input=false
 
+      - name: Azure Login
+        id: az-login
+        uses: Azure/login@v1.4.6
+        with:
+          client-id: ${{ fromJson(steps.terraform-output.outputs.stdout).github_client_id.value }}
+          tenant-id: ${{ fromJson(steps.terraform-output.outputs.stdout).tenant_id.value }}
+          subscription-id: ${{ fromJson(steps.terraform-output.outputs.stdout).subscription_id.value }}
+
+      - name: Deply Azure Function
+        id: deply-azure-function
+        uses: azure/CLI@v1
+        env:
+          RG: ${{ fromJson(steps.terraform-output.outputs.stdout).resource_group_name.value }}
+          AF: ${{ fromJson(steps.terraform-output.outputs.stdout).functionapp_name.value }}
+        with:
+          inlineScript: |
+            az functionapp config appsettings set -g $RG -n $AF --settings "WEBSITE_RUN_FROM_PACKAGE=1" --output none
+            az functionapp deployment source config-zip -g $RG -n $AF --src "Infrastructure/Portal SharePoint Integration/portal-api.zip" -t 180
+            az functionapp restart -g $RG -n $AF
