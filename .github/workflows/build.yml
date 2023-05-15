@@ -16,8 +16,7 @@ jobs:
       - shell: pwsh
         run: |
           cd SampleFunctionApp
-          dotnet build --configuration Release
-          dotnet publish --configuration Release --os win-x64 --output publish
+          dotnet publish --configuration Release --os win --output publish
           Compress-Archive -Path ${{ github.workspace }}/SampleFunctionApp/publish/* -DestinationPath ${{ github.workspace }}/sample-function-app.zip
 
       - uses: actions/upload-artifact@v1
