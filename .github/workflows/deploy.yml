@@ -32,7 +32,7 @@ jobs:
     steps:
       - name: Download IaC Artifact
         id: download-iac-artifact
-        uses: dawidd6/action-download-artifact@v2.27
+        uses: dawidd6/action-download-artifact@v2
         with:
           workflow: build.yml
           run_id: ${{ inputs.run_id }}
@@ -40,7 +40,7 @@ jobs:
 
       - name: Download FunctionApp Artifact
         id: download-functionapp-artifact
-        uses: dawidd6/action-download-artifact@v2.27
+        uses: dawidd6/action-download-artifact@v2
         with:
           workflow: build.yml
           run_id: ${{ inputs.run_id }}
