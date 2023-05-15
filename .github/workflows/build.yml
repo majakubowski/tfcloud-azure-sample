@@ -8,14 +8,14 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Publish FunctionApp
-        run: dotnet publish --configuration Release --os win --output publish
+        run: dotnet publish --configuration Release --output publish
         working-directory: SampleFunctionApp
 
       - name: Upload FunctionApp
