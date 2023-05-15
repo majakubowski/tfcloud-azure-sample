@@ -7,7 +7,7 @@ on:
       environment_name:
         required: true
         type: string
-      run_id:
+      build_run_number:
         required: true
         type: string
 
@@ -34,7 +34,7 @@ jobs:
         uses: dawidd6/action-download-artifact@v2
         with:
           workflow: build.yml
-          run_id: ${{ inputs.run_id }}
+          run_number: ${{ inputs.build_run_number }}
           name: iac
 
       - name: Download FunctionApp Artifact
@@ -42,7 +42,7 @@ jobs:
         uses: dawidd6/action-download-artifact@v2
         with:
           workflow: build.yml
-          run_id: ${{ inputs.run_id }}
+          run_number: ${{ inputs.build_run_number }}
           name: functionapp
           skip_unpack: true
 
@@ -59,6 +59,10 @@ jobs:
       - name: Terraform Apply
         id: terraform-apply
         run: terraform apply -auto-approve -input=false
+
+      - name: Terraform Output
+        id: terraform-output
+        run: terraform output -json
 
       - name: Azure Login
         id: az-login
