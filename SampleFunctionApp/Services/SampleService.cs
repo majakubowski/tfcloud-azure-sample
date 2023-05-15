@@ -14,7 +14,7 @@ public class SampleService
     public string SampleMethod(Payload payload)
     {
         logger.LogInformation("name = {name}", payload?.Name);
-        logger.LogInformation("test1 = {test1}, test2 = {test2", options.Test1, options.Test2);
+        logger.LogInformation("test1 = {test1}, test2 = {test2}", options.Test1, options.Test2);
         logger.LogDebug("Debug");
         logger.LogInformation("Information");
         logger.LogError("Error");
