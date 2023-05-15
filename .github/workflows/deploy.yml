@@ -78,5 +78,5 @@ jobs:
         with:
           inlineScript: |
             az functionapp config appsettings set -g $RG -n $AF --settings "WEBSITE_RUN_FROM_PACKAGE=1" --output none
-            az functionapp deployment source config-zip -g $RG -n $AF --src "Infrastructure/Portal SharePoint Integration/portal-api.zip" -t 180
+            az functionapp deployment source config-zip -g $RG -n $AF --src "functionapp.zip" -t 180
             az functionapp restart -g $RG -n $AF
