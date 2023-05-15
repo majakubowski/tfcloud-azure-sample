@@ -1,5 +1,3 @@
-using System.Web.Http;
-using Microsoft.AspNetCore.Mvc;
 namespace SampleFunctionApp.Triggers;
 
 public class SampleTrigger
