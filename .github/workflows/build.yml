@@ -13,15 +13,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - run: |
+      - shell: pwsh
+        run: |
           cd SampleFunctionApp
-          dotnet build --configuration Release 
+          dotnet build --configuration Release
           dotnet publish --configuration Release --output publish
-
-      - uses: vimtor/action-zip@v1
-        with:
-          files: ${{ github.workspace }}/SampleFunctionApp/publish/
-          dest: sample-function-app.zip
+          Compress-Archive -Path ${{ github.workspace }}/SampleFunctionApp/publish/ -DestinationPath ${{ github.workspace }}/sample-function-app.zip
 
       - uses: actions/upload-artifact@v1
         with:
