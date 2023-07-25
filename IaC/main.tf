@@ -10,5 +10,5 @@ module "github_federated_identity" {
   federated_identity_subject = "repo:${var.github_federation_subject.account}/${var.github_federation_subject.project}:environment:${var.github_federation_subject.env}"
 
   resource_group_name = module.af.resource_group_name
-  depends_on          = [module.af]
+  
 }
